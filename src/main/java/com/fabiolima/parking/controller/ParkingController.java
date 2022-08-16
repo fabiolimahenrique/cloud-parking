@@ -1,13 +1,14 @@
 package com.fabiolima.parking.controller;
 
 import com.fabiolima.parking.model.Parking;
+import com.fabiolima.parking.model.dto.ParkingCreateDTO;
 import com.fabiolima.parking.model.dto.ParkingDTO;
 import com.fabiolima.parking.model.mapper.ParkingMapper;
 import com.fabiolima.parking.service.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,10 +27,25 @@ public class ParkingController {
     }
 
     @GetMapping
-    public List<ParkingDTO> findAll() {
+    public ResponseEntity<List<ParkingDTO>> findAll() {
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDTOList(parkingList);
-        return result;
+        return  ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ParkingDTO> findById(@PathVariable String id) {
+        Parking parking = parkingService.findById(id);
+        ParkingDTO result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping
+    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO parkingCreateDTO){
+        var parkingCreate = parkingMapper.toParkingCreateDTO(parkingCreateDTO);
+        var parking = parkingService.create(parkingCreate);
+        var result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
 
