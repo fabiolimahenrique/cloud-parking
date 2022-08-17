@@ -1,5 +1,6 @@
 package com.fabiolima.parking.service;
 
+import com.fabiolima.parking.exception.ParkingNotFoundException;
 import com.fabiolima.parking.model.Parking;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class ParkingService {
         var id = getUUid();
         var id1 = getUUid();
         Parking parking = new Parking(id, "HHH-9987", "CE", "PASSAT", "Azul");
-        Parking parking1 = new Parking(id, "YYY-1111", "SP", "FUSCA", "Preta");
+        Parking parking1 = new Parking(id1, "YYY-1111", "SP", "FUSCA", "Preta");
         parkingMap.put(id, parking);
         parkingMap.put(id1, parking1);
 
@@ -39,7 +40,13 @@ public class ParkingService {
 
 
     public Parking findById(String id) {
-       return parkingMap.get(id);
+        Parking parking = parkingMap.get(id);
+
+        if (parking == null){
+           throw new ParkingNotFoundException(id);
+        }
+
+        return parking;
     }
 
     public Parking create(Parking parkingCreate) {
@@ -50,5 +57,17 @@ public class ParkingService {
         return parkingCreate;
 
 
+    }
+
+    public void delete(String id) {
+        Parking parking = findById(id);
+        parkingMap.remove(id);
+    }
+
+    public Parking updade(String id, Parking parkingCreate) {
+        Parking parking = findById(id);
+        parking.setColor(parkingCreate.getColor());
+        parkingMap.replace(id, parking);
+        return parking;
     }
 }
