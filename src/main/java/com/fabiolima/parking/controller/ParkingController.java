@@ -5,6 +5,8 @@ import com.fabiolima.parking.model.dto.ParkingCreateDTO;
 import com.fabiolima.parking.model.dto.ParkingDTO;
 import com.fabiolima.parking.model.mapper.ParkingMapper;
 import com.fabiolima.parking.service.ParkingService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/parking")
+@Api(tags = "Parking Cotroller")
 public class ParkingController {
 
     private static ParkingService parkingService;
@@ -27,6 +30,7 @@ public class ParkingController {
     }
 
     @GetMapping
+    @ApiOperation("Find all parkings")
     public ResponseEntity<List<ParkingDTO>> findAll() {
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDTOList(parkingList);
